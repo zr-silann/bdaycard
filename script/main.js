@@ -31,7 +31,7 @@ const fetchData = () => {
 const playPopSound = () => {
   // Replace "sound/firework.mp3" with the actual path to your sound file
   const popAudio = new Audio("sound/fireworks.mp3"); 
-  popAudio.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  popAudio.volume = 0.2; // Adjust volume if it's too loud (0.0 to 1.0)
   popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
@@ -39,8 +39,8 @@ const playPopSound = () => {
 const playSong= () => {
   // Replace "sound/firework.mp3" with the actual path to your sound file
   const bdaySong = new Audio("sound/bday-song.mp3"); 
-  popAudio.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
-  popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
+  bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
 // Animation Timeline
