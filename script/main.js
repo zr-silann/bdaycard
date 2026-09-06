@@ -1,4 +1,3 @@
-
 const fetchData = () => {
   fetch("customize.json")
     .then(response => {
@@ -9,40 +8,25 @@ const fetchData = () => {
     })
     .then(data => {
       const dataArr = Object.keys(data);
-
       dataArr.forEach(customData => {
         if (data[customData] !== "") {
-          const element = document.querySelector(
-            `[data-node-name*="${customData}"]`
-          );
-
-          // Prevent missing HTML elements from crashing the script
-          if (!element) {
-            console.warn(
-              `No HTML element found for data-node-name="${customData}"`
-            );
-            return;
-          }
-
-          if (customData === "imagePath") {
-            element.setAttribute("src", data[customData]);
-          } else {
-            element.innerText = data[customData];
+          const element = document.querySelector(`[data-node-name*="${customData}"]`);
+          if (element) {
+            if (customData === "imagePath") {
+              element.setAttribute("src", data[customData]);
+            } else {
+              element.innerText = data[customData];
+            }
           }
         }
       });
-
-      // Start animation after all JSON data has been inserted
       animationTimeline();
     })
     .catch(error => {
-      console.error("Error loading customize.json:", error);
-
-      // Still run animation if JSON fails
-      animationTimeline();
+      console.warn("Using default text due to fetch error:", error);
+      animationTimeline(); // GUARANTEES the animation runs anyway!
     });
 };
-
 
 let activePopSound = null;
 
