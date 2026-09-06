@@ -111,7 +111,7 @@ const animationTimeline = () => {
     .to(".six", 0.5, { opacity: 0, y: 30, zIndex: "-1" })
     .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
     .to(".last-smile", 0.5, { rotation: 90 }, "+=1")
-    .to("#cardWrapper", 1, { autoAlpha: 1, onComplete: () => console.log("Timeline complete") });
+    .to("#cardWrapper", 1, { autoAlpha: 1, onComplete: () => console.log("Timeline complete, card should be visible") });
 
   const replyBtn = document.getElementById("replay");
   if (replyBtn) replyBtn.addEventListener("click", () => tl.restart());
