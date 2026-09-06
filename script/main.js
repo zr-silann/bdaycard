@@ -75,7 +75,6 @@ const animationTimeline = () => {
     skewX: "-15deg"
   };
 
- 
 let activePopSound = null;
 
 // Starts the main pop sound instantly when the animation comes in
