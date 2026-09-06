@@ -19,9 +19,9 @@ const fetchData = () => {
         }
 
         // Check if iteration is complete to trigger timeline
-        if (dataArr.length === dataArr.indexOf(customData) + 1) {
+        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
           animationTimeline();
-        }
+        } 
       });
     })
     .catch(() => {
@@ -31,11 +31,9 @@ const fetchData = () => {
 };
 
 
-// ==========================================================
-// MUSIC PLAYER - ONLY PART CHANGED
-// ==========================================================
-
-let activePopSound = null;
+// ============================================================
+// MUSIC PLAYER
+// ============================================================
 
 let bdaySong = new Audio("sound/bday-song.mp3");
 
@@ -44,29 +42,49 @@ bdaySong.loop = true;
 bdaySong.preload = "auto";
 
 
-// This attempts to start the birthday song
-// when the page receives the user's first interaction.
+// Try autoplay immediately
 const playSong = () => {
-  bdaySong.play().catch(e => {
-    console.log("Birthday song autoplay blocked:", e);
+  bdaySong.play().catch(() => {
+    console.log("Autoplay blocked. Waiting for user interaction.");
   });
 };
 
 
-// Start music from the first click/tap.
-// This DOES NOT control or start the animation.
-document.addEventListener("click", playSong, { once: true });
-document.addEventListener("touchstart", playSong, { once: true });
+// If autoplay is blocked, the first click/tap starts the song
+const startMusicAfterInteraction = () => {
+  bdaySong.play()
+    .then(() => {
+      console.log("Birthday song started.");
+    })
+    .catch(error => {
+      console.log("Birthday song could not start:", error);
+    });
+
+  document.removeEventListener("click", startMusicAfterInteraction);
+  document.removeEventListener("touchstart", startMusicAfterInteraction);
+};
 
 
-// ==========================================================
+// Listen for user interaction
+document.addEventListener("click", startMusicAfterInteraction);
+document.addEventListener("touchstart", startMusicAfterInteraction);
+
+
+// Try to start music immediately
+playSong();
+
+
+// ============================================================
 // FIREWORK SOUNDS
-// ==========================================================
+// ============================================================
+
+let activePopSound = null;
+
 
 // Starts the main pop sound instantly when the animation comes in
 const playPopSoundInstantly = () => {
-  activePopSound = new Audio("sound/fireworks.mp3");
-  activePopSound.volume = 0.1;
+  activePopSound = new Audio("sound/fireworks.mp3"); 
+  activePopSound.volume = 0.1; 
   activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
@@ -74,8 +92,8 @@ const playPopSoundInstantly = () => {
 // Delays any extra/repeated pops by half a second (500ms)
 const playDelayedPopSound = () => {
   setTimeout(() => {
-    const delayedPop = new Audio("sound/fireworks.mp3");
-    delayedPop.volume = 0.1;
+    const delayedPop = new Audio("sound/fireworks.mp3"); 
+    delayedPop.volume = 0.1; 
     delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
   }, 500);
 };
@@ -86,20 +104,29 @@ const stopPopSound = () => {
   if (activePopSound) {
     let fadeAudio = setInterval(() => {
       if (activePopSound.volume > 0.05) {
-        activePopSound.volume -= 0.05;
+        activePopSound.volume -= 0.05; // Reduces volume smoothly
       } else {
         clearInterval(fadeAudio);
         activePopSound.pause();
         activePopSound.currentTime = 0;
       }
-    }, 30);
+    }, 30); // Adjust speed of fade here
   }
 };
 
 
 
 
-// Animation Timeline
+// Add this right before you declare `const tl = new TimelineMax();`
+// Keep track of the active audio instance globally in your script
+
+
+// Add this right before you declare `const tl = new TimelineMax();`
+
+// ============================================================
+// ANIMATION TIMELINE
+// ============================================================
+
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
@@ -134,21 +161,17 @@ const animationTimeline = () => {
 
   
   tl
-
     .to(".container", 0.1, {
       visibility: "visible"
     })
-
     .from(".one", 0.7, {
       opacity: 0,
       y: 10
     })
-
     .from(".two", 0.4, {
       opacity: 0,
       y: 10
     })
-
     .to(
       ".one",
       0.7,
@@ -158,7 +181,6 @@ const animationTimeline = () => {
       },
       "+=2.5"
     )
-
     .to(
       ".two",
       0.7,
@@ -168,12 +190,10 @@ const animationTimeline = () => {
       },
       "-=1"
     )
-
     .from(".three", 0.7, {
       opacity: 0,
       y: 10
     })
-
     .to(
       ".three",
       0.7,
@@ -183,17 +203,14 @@ const animationTimeline = () => {
       },
       "+=2"
     )
-
     .from(".four", 0.7, {
       scale: 0.2,
       opacity: 0
     })
-
     .from(".fake-btn", 0.3, {
       scale: 0.2,
       opacity: 0
     })
-
     .staggerTo(
       ".hbd-chatbox span",
       0.5,
@@ -202,11 +219,9 @@ const animationTimeline = () => {
       },
       0.05
     )
-
     .to(".fake-btn", 0.1, {
       backgroundColor: "rgb(127, 206, 248)"
     })
-
     .to(
       ".four",
       0.5,
@@ -217,30 +232,20 @@ const animationTimeline = () => {
       },
       "+=0.7"
     )
-
     .from(".idea-1", 0.7, ideaTextTrans)
-
     .to(".idea-1", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-2", 0.7, ideaTextTrans)
-
     .to(".idea-2", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-3", 0.7, ideaTextTrans)
-
     .to(".idea-3 strong", 0.5, {
       scale: 1.2,
       x: 10,
       backgroundColor: "rgb(21, 161, 237)",
       color: "#fff"
     })
-
     .to(".idea-3", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-4", 0.7, ideaTextTrans)
-
     .to(".idea-4", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(
       ".idea-5",
       0.7,
@@ -254,7 +259,6 @@ const animationTimeline = () => {
       },
       "+=0.5"
     )
-
     .to(
       ".idea-5 .smiley",
       0.7,
@@ -264,7 +268,6 @@ const animationTimeline = () => {
       },
       "+=0.4"
     )
-
     .to(
       ".idea-5",
       0.7,
@@ -274,7 +277,6 @@ const animationTimeline = () => {
       },
       "+=2"
     )
-
     .staggerFrom(
       ".idea-6 span",
       0.8,
@@ -286,7 +288,6 @@ const animationTimeline = () => {
       },
       0.2
     )
-
     .staggerTo(
       ".idea-6 span",
       0.8,
@@ -299,16 +300,13 @@ const animationTimeline = () => {
       0.2,
       "+=1"
     )
-
     .call(() => {
       const cakeAnim = document.getElementById("bizcocho_1");
       if (cakeAnim) cakeAnim.beginElement();
     })
-
     .to(".cake-container", 0.5, {
       autoAlpha: 1
     })
-
     .staggerFromTo(
       ".baloons img",
       2.5,
@@ -322,11 +320,10 @@ const animationTimeline = () => {
       },
       0.2
     )
-
     .to(".cake-container", 0.5, {
       autoAlpha: 0
     })
-
+  
     .from(
       ".lydia-dp",
       0.5,
@@ -338,7 +335,7 @@ const animationTimeline = () => {
         rotationZ: -45
       }
     )
-
+ 
     .staggerFrom(
       ".wish-hbd span",
       0.7,
@@ -351,7 +348,6 @@ const animationTimeline = () => {
       },
       0.1
     )
-
     .staggerFromTo(
       ".wish-hbd span",
       0.7,
@@ -368,7 +364,6 @@ const animationTimeline = () => {
       0.1,
       "party"
     )
-
     .from(
       ".wish h5",
       0.5,
@@ -395,15 +390,12 @@ const animationTimeline = () => {
       },
       0.3
     )
-
     .to(".six", 0.5, {
       opacity: 0,
       y: 30,
       zIndex: "-1"
     })
-
     .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
-
     .to(
       ".last-smile",
       0.5,
@@ -412,38 +404,27 @@ const animationTimeline = () => {
       },
       "+=1"
     )
-
-    .to(
-      ".nine",
-      0.8,
-      {
-        opacity: 0,
-        y: -20
-      },
-      "+=1.5"
-    )
-
+    .to(".nine", 0.8, {
+      opacity: 0,
+      y: -20
+    }, "+=1.5")
     .to("#cardWrapper", 1, {
       autoAlpha: 1
     });
 
-
   // Safe restart button binding
   const replyBtn = document.getElementById("replay");
-
   if (replyBtn) {
     replyBtn.addEventListener("click", () => {
+      tl.restart();
 
       // Restart birthday song
       if (bdaySong) {
         bdaySong.currentTime = 0;
-
         bdaySong.play().catch(e => {
           console.log("Audio play blocked by browser:", e);
         });
       }
-
-      tl.restart();
     });
   }
 };
