@@ -75,10 +75,7 @@ const animationTimeline = () => {
     skewX: "-15deg"
   };
 
-  .call(() => {
-      playSong();
-    })
-
+ 
 let activePopSound = null;
 
 // Starts the main pop sound instantly when the animation comes in
@@ -114,7 +111,12 @@ const stopPopSound = () => {
 
   const tl = new TimelineMax();
 
+  
   tl
+     .call(() => {
+      playSong();
+    })
+
     .to(".container", 0.1, {
       visibility: "visible"
     })
