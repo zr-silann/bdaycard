@@ -1,5 +1,4 @@
-```javascript
-// Import the data to customize and insert them into page
+
 
 
 const fetchData = () => {
@@ -30,56 +29,7 @@ const fetchData = () => {
     });
 };
 
-
-// ============================================================
-// MUSIC PLAYER
-// ============================================================
-
-let bdaySong = new Audio("sound/bday-song.mp3");
-
-bdaySong.volume = 0.4;
-bdaySong.loop = true;
-bdaySong.preload = "auto";
-
-
-// Try autoplay immediately
-const playSong = () => {
-  bdaySong.play().catch(() => {
-    console.log("Autoplay blocked. Waiting for user interaction.");
-  });
-};
-
-
-// If autoplay is blocked, the first click/tap starts the song
-const startMusicAfterInteraction = () => {
-  bdaySong.play()
-    .then(() => {
-      console.log("Birthday song started.");
-    })
-    .catch(error => {
-      console.log("Birthday song could not start:", error);
-    });
-
-  document.removeEventListener("click", startMusicAfterInteraction);
-  document.removeEventListener("touchstart", startMusicAfterInteraction);
-};
-
-
-// Listen for user interaction
-document.addEventListener("click", startMusicAfterInteraction);
-document.addEventListener("touchstart", startMusicAfterInteraction);
-
-
-// Try to start music immediately
-playSong();
-
-
-// ============================================================
-// FIREWORK SOUNDS
-// ============================================================
-
 let activePopSound = null;
-
 
 // Starts the main pop sound instantly when the animation comes in
 const playPopSoundInstantly = () => {
@@ -87,7 +37,6 @@ const playPopSoundInstantly = () => {
   activePopSound.volume = 0.1; 
   activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
-
 
 // Delays any extra/repeated pops by half a second (500ms)
 const playDelayedPopSound = () => {
@@ -97,7 +46,6 @@ const playDelayedPopSound = () => {
     delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
   }, 500);
 };
-
 
 // Stops the sounds when the "eight vg" animation ends
 const stopPopSound = () => {
@@ -123,10 +71,15 @@ const stopPopSound = () => {
 
 // Add this right before you declare `const tl = new TimelineMax();`
 
-// ============================================================
-// ANIMATION TIMELINE
-// ============================================================
+const playSong= () => {
+  // Replace "sound/firework.mp3" with the actual path to your sound file
+  const bdaySong = new Audio("sound/bday-song.mp3"); 
+  bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
+};
 
+
+// Animation Timeline
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
@@ -134,13 +87,13 @@ const animationTimeline = () => {
   if (textBoxChars) {
     textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
       .split("")
-      .join("</span><span>")}</span>`;
+      .join("</span><span>")}</span`;
   }
 
   if (hbd) {
     hbd.innerHTML = `<span>${hbd.innerHTML
       .split("")
-      .join("</span><span>")}</span>`;
+      .join("</span><span>")}</span`;
   }
 
   const ideaTextTrans = {
@@ -156,11 +109,14 @@ const animationTimeline = () => {
     rotationY: 5,
     skewX: "-15deg"
   };
-
   const tl = new TimelineMax();
 
   
   tl
+     .call(() => {
+      playSong();
+    })
+
     .to(".container", 0.1, {
       visibility: "visible"
     })
@@ -324,6 +280,8 @@ const animationTimeline = () => {
       autoAlpha: 0
     })
   
+    // Example: if your audio element has an ID of "background-music"
+
     .from(
       ".lydia-dp",
       0.5,
@@ -375,6 +333,8 @@ const animationTimeline = () => {
       "party"
     )
 
+  
+    
     .staggerTo(
       ".eight svg",
       1.5,
@@ -384,9 +344,9 @@ const animationTimeline = () => {
         scale: 80,
         repeat: 3,
         repeatDelay: 1.4,
-        onStart: playPopSoundInstantly,
+        onStart: playPopSoundInstantly,   // Plays sound when the animation first starts
         onRepeat: playPopSoundInstantly,
-        onComplete: stopPopSound
+        onComplete: stopPopSound // Plays sound again for every repeat cycle
       },
       0.3
     )
@@ -404,7 +364,7 @@ const animationTimeline = () => {
       },
       "+=1"
     )
-    .to(".nine", 0.8, {
+ .to(".nine", 0.8, {
       opacity: 0,
       y: -20
     }, "+=1.5")
@@ -417,19 +377,10 @@ const animationTimeline = () => {
   if (replyBtn) {
     replyBtn.addEventListener("click", () => {
       tl.restart();
-
-      // Restart birthday song
-      if (bdaySong) {
-        bdaySong.currentTime = 0;
-        bdaySong.play().catch(e => {
-          console.log("Audio play blocked by browser:", e);
-        });
-      }
     });
   }
 };
 
-
 // Run fetch and animation sequence
 fetchData();
-```
+
