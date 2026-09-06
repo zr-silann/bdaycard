@@ -1,3 +1,4 @@
+// Import the data to customize and insert them into page
 const fetchData = () => {
   fetch("customize.json")
     .then(response => {
@@ -24,22 +25,19 @@ const fetchData = () => {
     })
     .catch(error => {
       console.warn("Using default text due to fetch error:", error);
-      animationTimeline(); // GUARANTEES the animation runs anyway!
+      animationTimeline();
     });
 };
 
+// --- AUDIO GLOBALS & HELPERS ---
 let activePopSound = null;
 
-
-// Starts the main pop sound instantly when the animation comes in
 const playPopSoundInstantly = () => {
   activePopSound = new Audio("sound/fireworks.mp3"); 
   activePopSound.volume = 0.1; 
   activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
-
-// Delays any extra/repeated pops by half a second (500ms)
 const playDelayedPopSound = () => {
   setTimeout(() => {
     const delayedPop = new Audio("sound/fireworks.mp3"); 
@@ -48,8 +46,6 @@ const playDelayedPopSound = () => {
   }, 500);
 };
 
-
-// Stops the sounds when the "eight vg" animation ends
 const stopPopSound = () => {
   if (activePopSound) {
     let fadeAudio = setInterval(() => {
@@ -64,16 +60,13 @@ const stopPopSound = () => {
   }
 };
 
-
-// Birthday song
 const playSong = () => {
   const bdaySong = new Audio("sound/bday-song.mp3"); 
   bdaySong.volume = 0.4;
   bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
-
-// Animation Timeline
+// --- ANIMATION TIMELINE ---
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
@@ -106,26 +99,21 @@ const animationTimeline = () => {
 
   const tl = new TimelineMax();
 
-  
   tl
     .call(() => {
       playSong();
     })
-
     .to(".container", 0.1, {
       visibility: "visible"
     })
-
     .from(".one", 0.7, {
       opacity: 0,
       y: 10
     })
-
     .from(".two", 0.4, {
       opacity: 0,
       y: 10
     })
-
     .to(
       ".one",
       0.7,
@@ -135,7 +123,6 @@ const animationTimeline = () => {
       },
       "+=2.5"
     )
-
     .to(
       ".two",
       0.7,
@@ -145,12 +132,10 @@ const animationTimeline = () => {
       },
       "-=1"
     )
-
     .from(".three", 0.7, {
       opacity: 0,
       y: 10
     })
-
     .to(
       ".three",
       0.7,
@@ -160,17 +145,14 @@ const animationTimeline = () => {
       },
       "+=2"
     )
-
     .from(".four", 0.7, {
       scale: 0.2,
       opacity: 0
     })
-
     .from(".fake-btn", 0.3, {
       scale: 0.2,
       opacity: 0
     })
-
     .staggerTo(
       ".hbd-chatbox span",
       0.5,
@@ -179,11 +161,9 @@ const animationTimeline = () => {
       },
       0.05
     )
-
     .to(".fake-btn", 0.1, {
       backgroundColor: "rgb(127, 206, 248)"
     })
-
     .to(
       ".four",
       0.5,
@@ -194,30 +174,20 @@ const animationTimeline = () => {
       },
       "+=0.7"
     )
-
     .from(".idea-1", 0.7, ideaTextTrans)
-
     .to(".idea-1", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-2", 0.7, ideaTextTrans)
-
     .to(".idea-2", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-3", 0.7, ideaTextTrans)
-
     .to(".idea-3 strong", 0.5, {
       scale: 1.2,
       x: 10,
       backgroundColor: "rgb(21, 161, 237)",
       color: "#fff"
     })
-
     .to(".idea-3", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(".idea-4", 0.7, ideaTextTrans)
-
     .to(".idea-4", 0.7, ideaTextTransLeave, "+=1.5")
-
     .from(
       ".idea-5",
       0.7,
@@ -231,7 +201,6 @@ const animationTimeline = () => {
       },
       "+=0.5"
     )
-
     .to(
       ".idea-5 .smiley",
       0.7,
@@ -241,7 +210,6 @@ const animationTimeline = () => {
       },
       "+=0.4"
     )
-
     .to(
       ".idea-5",
       0.7,
@@ -251,7 +219,6 @@ const animationTimeline = () => {
       },
       "+=2"
     )
-
     .staggerFrom(
       ".idea-6 span",
       0.8,
@@ -263,7 +230,6 @@ const animationTimeline = () => {
       },
       0.2
     )
-
     .staggerTo(
       ".idea-6 span",
       0.8,
@@ -276,16 +242,13 @@ const animationTimeline = () => {
       0.2,
       "+=1"
     )
-
     .call(() => {
       const cakeAnim = document.getElementById("bizcocho_1");
       if (cakeAnim) cakeAnim.beginElement();
     })
-
     .to(".cake-container", 0.5, {
       autoAlpha: 1
     })
-
     .staggerFromTo(
       ".baloons img",
       2.5,
@@ -299,11 +262,9 @@ const animationTimeline = () => {
       },
       0.2
     )
-
     .to(".cake-container", 0.5, {
       autoAlpha: 0
     })
-
     .from(
       ".lydia-dp",
       0.5,
@@ -315,7 +276,6 @@ const animationTimeline = () => {
         rotationZ: -45
       }
     )
-
     .staggerFrom(
       ".wish-hbd span",
       0.7,
@@ -328,7 +288,6 @@ const animationTimeline = () => {
       },
       0.1
     )
-
     .staggerFromTo(
       ".wish-hbd span",
       0.7,
@@ -345,7 +304,6 @@ const animationTimeline = () => {
       0.1,
       "party"
     )
-
     .from(
       ".wish h5",
       0.5,
@@ -356,7 +314,6 @@ const animationTimeline = () => {
       },
       "party"
     )
-
     .staggerTo(
       ".eight svg",
       1.5,
@@ -372,15 +329,12 @@ const animationTimeline = () => {
       },
       0.3
     )
-
     .to(".six", 0.5, {
       opacity: 0,
       y: 30,
       zIndex: "-1"
     })
-
     .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
-
     .to(
       ".last-smile",
       0.5,
@@ -389,7 +343,6 @@ const animationTimeline = () => {
       },
       "+=1"
     )
-
     .to(
       ".nine",
       0.8,
@@ -399,23 +352,20 @@ const animationTimeline = () => {
       },
       "+=1.5"
     )
-
     .to("#cardWrapper", 1, {
       autoAlpha: 1
     });
 
-
   // Safe restart button binding
   const replyBtn = document.getElementById("replay");
-
   if (replyBtn) {
     replyBtn.addEventListener("click", () => {
       tl.restart();
     });
   }
+}; // <--- THIS CLOSING BRACE WAS MISSING
 
-
-
+// --- START BUTTON EVENT LISTENER ---
 document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("start-btn") || document.getElementById("start") || document.querySelector("button");
   const introContainer = document.getElementById("intro-container");
@@ -428,7 +378,5 @@ document.addEventListener("DOMContentLoaded", () => {
       playSong();
       fetchData();
     });
-  } else {
-    console.error("Could not find the start button element.");
   }
 });
