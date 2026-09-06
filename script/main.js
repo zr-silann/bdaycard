@@ -119,6 +119,17 @@ const animationTimeline = () => {
 
 // 🚀 Init
 document.addEventListener("DOMContentLoaded", () => {
-  playSong();
-  fetchData();
+  const startBtn = document.getElementById("start-btn");
+  const introContainer = document.getElementById("intro-container");
+
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      console.log("Start clicked"); // debug log
+      if (introContainer) introContainer.style.display = "none";
+      playSong();
+      fetchData();
+    });
+  } else {
+    console.warn("Start button not found in DOM");
+  }
 });
