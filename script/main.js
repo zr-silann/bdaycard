@@ -29,22 +29,6 @@ const fetchData = () => {
     });
 };
 
-
-
-// Add this right before you declare `const tl = new TimelineMax();`
-// Keep track of the active audio instance globally in your script
-
-
-// Add this right before you declare `const tl = new TimelineMax();`
-
-const playSong= () => {
-  // Replace "sound/firework.mp3" with the actual path to your sound file
-  const bdaySong = new Audio("sound/bday-song.mp3"); 
-  bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
-  bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
-};
-
-
 let activePopSound = null;
 
 // Starts the main pop sound instantly when the animation comes in
@@ -76,6 +60,22 @@ const stopPopSound = () => {
       }
     }, 30); // Adjust speed of fade here
   }
+};
+
+
+
+
+// Add this right before you declare `const tl = new TimelineMax();`
+// Keep track of the active audio instance globally in your script
+
+
+// Add this right before you declare `const tl = new TimelineMax();`
+
+const playSong= () => {
+  // Replace "sound/firework.mp3" with the actual path to your sound file
+  const bdaySong = new Audio("sound/bday-song.mp3"); 
+  bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
 
