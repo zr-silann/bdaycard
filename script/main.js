@@ -19,9 +19,9 @@ const fetchData = () => {
         }
 
         // Check if iteration is complete to trigger timeline
-        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
+        if (dataArr.length === dataArr.indexOf(customData) + 1) {
           animationTimeline();
-        } 
+        }
       });
     })
     .catch(() => {
@@ -31,9 +31,11 @@ const fetchData = () => {
 };
 
 
-// ============================================================
-// MUSIC PLAYER
-// ============================================================
+// ==========================================================
+// MUSIC PLAYER - ONLY PART CHANGED
+// ==========================================================
+
+let activePopSound = null;
 
 let bdaySong = new Audio("sound/bday-song.mp3");
 
@@ -41,50 +43,30 @@ bdaySong.volume = 0.4;
 bdaySong.loop = true;
 bdaySong.preload = "auto";
 
-let musicStarted = false;
 
-
-// Start the birthday song
+// This attempts to start the birthday song
+// when the page receives the user's first interaction.
 const playSong = () => {
-
-  if (musicStarted) {
-    return;
-  }
-
-  bdaySong.currentTime = 0;
-
-  bdaySong.play()
-    .then(() => {
-      musicStarted = true;
-      console.log("Birthday song is playing!");
-    })
-    .catch(e => {
-      console.log("Birthday song could not play:", e);
-    });
+  bdaySong.play().catch(e => {
+    console.log("Birthday song autoplay blocked:", e);
+  });
 };
 
 
-// Start music on the first user interaction
-document.addEventListener("click", () => {
-  playSong();
-}, { once: true });
-
-document.addEventListener("touchstart", () => {
-  playSong();
-}, { once: true });
+// Start music from the first click/tap.
+// This DOES NOT control or start the animation.
+document.addEventListener("click", playSong, { once: true });
+document.addEventListener("touchstart", playSong, { once: true });
 
 
-// ============================================================
+// ==========================================================
 // FIREWORK SOUNDS
-// ============================================================
-
-let activePopSound = null;
-
+// ==========================================================
 
 // Starts the main pop sound instantly when the animation comes in
 const playPopSoundInstantly = () => {
-  activePopSound = new Audio("sound/fireworks.mp3"); 
-  activePopSound.volume = 0.1; 
+  activePopSound = new Audio("sound/fireworks.mp3");
+  activePopSound.volume = 0.1;
   activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
@@ -92,8 +74,8 @@ const playPopSoundInstantly = () => {
 // Delays any extra/repeated pops by half a second (500ms)
 const playDelayedPopSound = () => {
   setTimeout(() => {
-    const delayedPop = new Audio("sound/fireworks.mp3"); 
-    delayedPop.volume = 0.1; 
+    const delayedPop = new Audio("sound/fireworks.mp3");
+    delayedPop.volume = 0.1;
     delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
   }, 500);
 };
@@ -104,13 +86,13 @@ const stopPopSound = () => {
   if (activePopSound) {
     let fadeAudio = setInterval(() => {
       if (activePopSound.volume > 0.05) {
-        activePopSound.volume -= 0.05; // Reduces volume smoothly
+        activePopSound.volume -= 0.05;
       } else {
         clearInterval(fadeAudio);
         activePopSound.pause();
         activePopSound.currentTime = 0;
       }
-    }, 30); // Adjust speed of fade here
+    }, 30);
   }
 };
 
@@ -452,7 +434,7 @@ const animationTimeline = () => {
   if (replyBtn) {
     replyBtn.addEventListener("click", () => {
 
-      // Restart song
+      // Restart birthday song
       if (bdaySong) {
         bdaySong.currentTime = 0;
 
