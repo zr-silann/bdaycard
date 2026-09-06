@@ -1,100 +1,125 @@
+```javascript
 // Import the data to customize and insert them into page
 
+let bdaySong = null;
+let activePopSound = null;
 
-const fetchData = () => {
-  fetch("customize.json")
-    .then(data => data.json())
-    .then(data => {
-      dataArr = Object.keys(data);
-      dataArr.map(customData => {
-        if (data[customData] !== "") {
-          if (customData === "imagePath") {
-            document
-              .querySelector(`[data-node-name*="${customData}"]`)
-              .setAttribute("src", data[customData]);
-          } else {
-            document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData];
-          }
-        }
 
-        // Check if iteration is complete to trigger timeline
-        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
-          animationTimeline();
-        } 
-      });
-    })
-    .catch(() => {
-      // Fallback if fetch fails so animation still runs
-      animationTimeline();
-    });
+// ===============================
+// BIRTHDAY SONG
+// ===============================
+
+const playSong = () => {
+  // Don't create multiple audio instances
+  if (bdaySong) return;
+
+  bdaySong = new Audio("sound/bday-song.mp3");
+  bdaySong.volume = 0.4;
+  bdaySong.loop = true;
+
+  bdaySong.play().catch(e => {
+    console.log("Audio play blocked by browser:", e);
+  });
 };
 
-let activePopSound = null;
+
+// ===============================
+// START MUSIC ON FIRST USER TAP
+// ===============================
+
+let musicStarted = false;
+
+const startMusic = () => {
+  if (musicStarted) return;
+
+  musicStarted = true;
+
+  playSong();
+
+  // Start the animation after the user's interaction
+  animationTimeline();
+};
+
+
+// Start when the user clicks or taps anywhere
+document.addEventListener("click", startMusic, { once: true });
+document.addEventListener("touchstart", startMusic, { once: true });
+
+
+// ===============================
+// POP SOUNDS
+// ===============================
 
 // Starts the main pop sound instantly when the animation comes in
 const playPopSoundInstantly = () => {
-  activePopSound = new Audio("sound/fireworks.mp3"); 
-  activePopSound.volume = 0.1; 
-  activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+  activePopSound = new Audio("sound/fireworks.mp3");
+  activePopSound.volume = 0.1;
+
+  activePopSound
+    .play()
+    .catch(e => console.log("Audio play blocked by browser:", e));
 };
 
-// Delays any extra/repeated pops by half a second (500ms)
+
+// Delays any extra/repeated pops by half a second
 const playDelayedPopSound = () => {
   setTimeout(() => {
-    const delayedPop = new Audio("sound/fireworks.mp3"); 
-    delayedPop.volume = 0.1; 
-    delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
+    const delayedPop = new Audio("sound/fireworks.mp3");
+    delayedPop.volume = 0.1;
+
+    delayedPop
+      .play()
+      .catch(e => console.log("Audio play blocked by browser:", e));
   }, 500);
 };
 
-// Stops the sounds when the "eight vg" animation ends
+
+// Stops the sounds when the fireworks animation ends
 const stopPopSound = () => {
   if (activePopSound) {
     let fadeAudio = setInterval(() => {
       if (activePopSound.volume > 0.05) {
-        activePopSound.volume -= 0.05; // Reduces volume smoothly
+        activePopSound.volume -= 0.05;
       } else {
         clearInterval(fadeAudio);
         activePopSound.pause();
         activePopSound.currentTime = 0;
       }
-    }, 30); // Adjust speed of fade here
+    }, 30);
   }
 };
 
 
+// ===============================
+// ANIMATION TIMELINE
+// ===============================
 
-
-// Add this right before you declare `const tl = new TimelineMax();`
-// Keep track of the active audio instance globally in your script
-
-
-// Add this right before you declare `const tl = new TimelineMax();`
-
-const playSong= () => {
-  // Replace "sound/firework.mp3" with the actual path to your sound file
-  const bdaySong = new Audio("sound/bday-song.mp3"); 
-  bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
-  bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
-};
-
-
-// Animation Timeline
 const animationTimeline = () => {
-  const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
-  const hbd = document.getElementsByClassName("wish-hbd")[0];
 
+  const textBoxChars =
+    document.getElementsByClassName("hbd-chatbox")[0];
+
+  const hbd =
+    document.getElementsByClassName("wish-hbd")[0];
+
+
+  // Split chatbox text into individual characters
   if (textBoxChars) {
-    textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
-      .split("")
-      .join("</span><span>")}</span`;
+    textBoxChars.innerHTML =
+      `<span>${textBoxChars.innerHTML
+        .split("")
+        .join("</span><span>")}</span>`;
   }
 
+
+  // Split birthday heading into individual characters
   if (hbd) {
-    hbd.innerHTML = `<span>${hbd.innerHTML
-      .split("")
-      .join("</span><span>")}</span`;
+    hbd.innerHTML =
+      `<span>${hbd.innerHTML
+        .split("")
+        .join("</span><span>")}</span>`;
   }
+
 
   const ideaTextTrans = {
     opacity: 0,
@@ -103,31 +128,37 @@ const animationTimeline = () => {
     skewX: "15deg"
   };
 
+
   const ideaTextTransLeave = {
     opacity: 0,
     y: 20,
     rotationY: 5,
     skewX: "-15deg"
   };
+
+
   const tl = new TimelineMax();
 
-  
-  tl
-     .call(() => {
-      playSong();
-    })
 
+  // ===============================
+  // ANIMATION
+  // ===============================
+
+  tl
     .to(".container", 0.1, {
       visibility: "visible"
     })
+
     .from(".one", 0.7, {
       opacity: 0,
       y: 10
     })
+
     .from(".two", 0.4, {
       opacity: 0,
       y: 10
     })
+
     .to(
       ".one",
       0.7,
@@ -137,6 +168,7 @@ const animationTimeline = () => {
       },
       "+=2.5"
     )
+
     .to(
       ".two",
       0.7,
@@ -146,10 +178,12 @@ const animationTimeline = () => {
       },
       "-=1"
     )
+
     .from(".three", 0.7, {
       opacity: 0,
       y: 10
     })
+
     .to(
       ".three",
       0.7,
@@ -159,14 +193,17 @@ const animationTimeline = () => {
       },
       "+=2"
     )
+
     .from(".four", 0.7, {
       scale: 0.2,
       opacity: 0
     })
+
     .from(".fake-btn", 0.3, {
       scale: 0.2,
       opacity: 0
     })
+
     .staggerTo(
       ".hbd-chatbox span",
       0.5,
@@ -175,9 +212,11 @@ const animationTimeline = () => {
       },
       0.05
     )
+
     .to(".fake-btn", 0.1, {
       backgroundColor: "rgb(127, 206, 248)"
     })
+
     .to(
       ".four",
       0.5,
@@ -188,20 +227,50 @@ const animationTimeline = () => {
       },
       "+=0.7"
     )
+
     .from(".idea-1", 0.7, ideaTextTrans)
-    .to(".idea-1", 0.7, ideaTextTransLeave, "+=1.5")
+
+    .to(
+      ".idea-1",
+      0.7,
+      ideaTextTransLeave,
+      "+=1.5"
+    )
+
     .from(".idea-2", 0.7, ideaTextTrans)
-    .to(".idea-2", 0.7, ideaTextTransLeave, "+=1.5")
+
+    .to(
+      ".idea-2",
+      0.7,
+      ideaTextTransLeave,
+      "+=1.5"
+    )
+
     .from(".idea-3", 0.7, ideaTextTrans)
+
     .to(".idea-3 strong", 0.5, {
       scale: 1.2,
       x: 10,
       backgroundColor: "rgb(21, 161, 237)",
       color: "#fff"
     })
-    .to(".idea-3", 0.7, ideaTextTransLeave, "+=1.5")
+
+    .to(
+      ".idea-3",
+      0.7,
+      ideaTextTransLeave,
+      "+=1.5"
+    )
+
     .from(".idea-4", 0.7, ideaTextTrans)
-    .to(".idea-4", 0.7, ideaTextTransLeave, "+=1.5")
+
+    .to(
+      ".idea-4",
+      0.7,
+      ideaTextTransLeave,
+      "+=1.5"
+    )
+
     .from(
       ".idea-5",
       0.7,
@@ -215,6 +284,7 @@ const animationTimeline = () => {
       },
       "+=0.5"
     )
+
     .to(
       ".idea-5 .smiley",
       0.7,
@@ -224,6 +294,7 @@ const animationTimeline = () => {
       },
       "+=0.4"
     )
+
     .to(
       ".idea-5",
       0.7,
@@ -233,6 +304,7 @@ const animationTimeline = () => {
       },
       "+=2"
     )
+
     .staggerFrom(
       ".idea-6 span",
       0.8,
@@ -244,6 +316,7 @@ const animationTimeline = () => {
       },
       0.2
     )
+
     .staggerTo(
       ".idea-6 span",
       0.8,
@@ -256,13 +329,20 @@ const animationTimeline = () => {
       0.2,
       "+=1"
     )
+
     .call(() => {
-      const cakeAnim = document.getElementById("bizcocho_1");
-      if (cakeAnim) cakeAnim.beginElement();
+      const cakeAnim =
+        document.getElementById("bizcocho_1");
+
+      if (cakeAnim) {
+        cakeAnim.beginElement();
+      }
     })
+
     .to(".cake-container", 0.5, {
       autoAlpha: 1
     })
+
     .staggerFromTo(
       ".baloons img",
       2.5,
@@ -276,11 +356,10 @@ const animationTimeline = () => {
       },
       0.2
     )
+
     .to(".cake-container", 0.5, {
       autoAlpha: 0
     })
-  
-    // Example: if your audio element has an ID of "background-music"
 
     .from(
       ".lydia-dp",
@@ -293,7 +372,7 @@ const animationTimeline = () => {
         rotationZ: -45
       }
     )
- 
+
     .staggerFrom(
       ".wish-hbd span",
       0.7,
@@ -306,6 +385,7 @@ const animationTimeline = () => {
       },
       0.1
     )
+
     .staggerFromTo(
       ".wish-hbd span",
       0.7,
@@ -322,6 +402,7 @@ const animationTimeline = () => {
       0.1,
       "party"
     )
+
     .from(
       ".wish h5",
       0.5,
@@ -333,8 +414,6 @@ const animationTimeline = () => {
       "party"
     )
 
-  
-    
     .staggerTo(
       ".eight svg",
       1.5,
@@ -344,18 +423,27 @@ const animationTimeline = () => {
         scale: 80,
         repeat: 3,
         repeatDelay: 1.4,
-        onStart: playPopSoundInstantly,   // Plays sound when the animation first starts
+
+        onStart: playPopSoundInstantly,
         onRepeat: playPopSoundInstantly,
-        onComplete: stopPopSound // Plays sound again for every repeat cycle
+        onComplete: stopPopSound
       },
       0.3
     )
+
     .to(".six", 0.5, {
       opacity: 0,
       y: 30,
       zIndex: "-1"
     })
-    .staggerFrom(".nine p", 1, ideaTextTrans, 1.2)
+
+    .staggerFrom(
+      ".nine p",
+      1,
+      ideaTextTrans,
+      1.2
+    )
+
     .to(
       ".last-smile",
       0.5,
@@ -364,23 +452,134 @@ const animationTimeline = () => {
       },
       "+=1"
     )
- .to(".nine", 0.8, {
-      opacity: 0,
-      y: -20
-    }, "+=1.5")
+
+    .to(
+      ".nine",
+      0.8,
+      {
+        opacity: 0,
+        y: -20
+      },
+      "+=1.5"
+    )
+
     .to("#cardWrapper", 1, {
       autoAlpha: 1
     });
 
-  // Safe restart button binding
-  const replyBtn = document.getElementById("replay");
+
+  // ===============================
+  // REPLAY BUTTON
+  // ===============================
+
+  const replyBtn =
+    document.getElementById("replay");
+
   if (replyBtn) {
     replyBtn.addEventListener("click", () => {
+
+      // Restart music
+      if (bdaySong) {
+        bdaySong.currentTime = 0;
+
+        bdaySong.play().catch(e => {
+          console.log(
+            "Audio play blocked by browser:",
+            e
+          );
+        });
+      }
+
+      // Restart animation
       tl.restart();
     });
   }
 };
 
-// Run fetch and animation sequence
-fetchData();
 
+// ===============================
+// LOAD CUSTOMIZATION DATA
+// ===============================
+
+const fetchData = () => {
+
+  fetch("customize.json")
+
+    .then(response => {
+
+      if (!response.ok) {
+        throw new Error(
+          `Failed to load customize.json: ${response.status}`
+        );
+      }
+
+      return response.json();
+    })
+
+    .then(data => {
+
+      const dataArr = Object.keys(data);
+
+      dataArr.forEach(customData => {
+
+        if (data[customData] !== "") {
+
+          const element =
+            document.querySelector(
+              `[data-node-name*="${customData}"]`
+            );
+
+
+          // Prevent missing HTML elements
+          // from crashing the script
+
+          if (!element) {
+
+            console.warn(
+              `No HTML element found for data-node-name="${customData}"`
+            );
+
+            return;
+          }
+
+
+          if (customData === "imagePath") {
+
+            element.setAttribute(
+              "src",
+              data[customData]
+            );
+
+          } else {
+
+            element.innerText =
+              data[customData];
+
+          }
+        }
+      });
+
+
+      // IMPORTANT:
+      // We DO NOT start animation here.
+      // It starts after the user's first click/tap
+      // so the browser allows the music to play.
+
+    })
+
+    .catch(error => {
+
+      console.error(
+        "Error loading customize.json:",
+        error
+      );
+
+      // Animation will still start
+      // when the user clicks/taps.
+    });
+};
+
+
+// Run fetch
+fetchData();
+```
