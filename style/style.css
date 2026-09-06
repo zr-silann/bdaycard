@@ -293,7 +293,9 @@ body {
 }
 
 /* Letter Container Setup */
-#cardWrapper.letter-container {
+#cardWrapper {
+  opacity: 0;
+  visibility: hidden;
   position: fixed !important;
   top: 50% !important;
   left: 50% !important;
@@ -303,8 +305,6 @@ body {
   max-width: 500px;
   max-height: 85vh;
   overflow-y: auto;
-  opacity: 0;
-  visibility: hidden;
   padding: 10px;
   box-sizing: border-box;
   scroll-behavior: smooth;
