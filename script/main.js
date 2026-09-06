@@ -291,7 +291,7 @@ const animationTimeline = () => {
         opacity: 0,
         scale: 80,
         repeat: 3,
-        repeatDelay: 1.4
+        repeatDelay: 1.4,
         onStart: playPopSound,   // Plays sound when the animation first starts
         onRepeat: playPopSound   // Plays sound again for every repeat cycle
       },
