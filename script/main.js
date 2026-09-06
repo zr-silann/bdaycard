@@ -3,19 +3,48 @@
 
 const fetchData = () => {
   fetch("customize.json")
-    .then(data => data.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to load customize.json: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
-      dataArr = Object.keys(data);
-      dataArr.map(customData => {
+      const dataArr = Object.keys(data);
+
+      dataArr.forEach(customData => {
         if (data[customData] !== "") {
+          const element = document.querySelector(
+            `[data-node-name*="${customData}"]`
+          );
+
+          // Prevent missing HTML elements from crashing the script
+          if (!element) {
+            console.warn(
+              `No HTML element found for data-node-name="${customData}"`
+            );
+            return;
+          }
+
           if (customData === "imagePath") {
-            document
-              .querySelector(`[data-node-name*="${customData}"]`)
-              .setAttribute("src", data[customData]);
+            element.setAttribute("src", data[customData]);
           } else {
-            document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData];
+            element.innerText = data[customData];
           }
         }
+      });
+
+      // Start animation after all JSON data has been inserted
+      animationTimeline();
+    })
+    .catch(error => {
+      console.error("Error loading customize.json:", error);
+
+      // Still run animation if JSON fails
+      animationTimeline();
+    });
+};
+
 
         // Check if iteration is complete to trigger timeline
         if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
