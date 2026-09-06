@@ -417,5 +417,21 @@ const animationTimeline = () => {
 
 
 // Run fetch and animation sequence
-fetchData();
+// Remove the old automatic fetchData(); at the bottom and replace with this:
+const startBtn = document.getElementById("start-btn");
+const introContainer = document.getElementById("intro-container");
 
+if (startBtn) {
+  startBtn.addEventListener("click", () => {
+    // Hide the intro overlay
+    if (introContainer) {
+      introContainer.style.display = "none";
+    }
+    
+    // Play song directly inside the user click event (bypasses browser block)
+    playSong();
+
+    // Start fetching customize data and run animation
+    fetchData();
+  });
+}
