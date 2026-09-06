@@ -416,10 +416,8 @@ const animationTimeline = () => {
 
 
 
-// Run fetch and animation sequence
-// Remove the old automatic fetchData(); at the bottom and replace with this:
 document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("start-btn");
+  const startBtn = document.getElementById("start-btn") || document.getElementById("start") || document.querySelector("button");
   const introContainer = document.getElementById("intro-container");
 
   if (startBtn) {
@@ -430,5 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
       playSong();
       fetchData();
     });
+  } else {
+    console.error("Could not find the start button element.");
   }
 });
