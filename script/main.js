@@ -87,14 +87,7 @@ const animationTimeline = () => {
 
 // 🚀 Init
 document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("start-btn");
-  const introContainer = document.getElementById("intro-container");
-
-  if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      if (introContainer) introContainer.style.display = "none";
-      playSong();   // 🎵 Play birthday song
-      fetchData();  // Load data + run animation
-    });
-  }
+  playSong();   // 🎵 Play birthday song
+  fetchData();  // Load data + run animation
 });
+
