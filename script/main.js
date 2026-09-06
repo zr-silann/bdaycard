@@ -28,20 +28,44 @@ const fetchData = () => {
 };
 
 // Add this right before you declare `const tl = new TimelineMax();`
-const playPopSound = () => {
-  // Replace "sound/firework.mp3" with the actual path to your sound file
-  const popAudio = new Audio("sound/fireworks.mp3"); 
-  popAudio.volume = 0.2; // Adjust volume if it's too loud (0.0 to 1.0)
-  popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
+// Keep track of the active audio instance globally in your script
+let activePopSound = null;
+
+// Starts the main pop sound instantly when the animation comes in
+const playPopSoundInstantly = () => {
+  activePopSound = new Audio("sound/fireworks.mp3"); 
+  activePopSound.volume = 0.4; 
+  activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+};
+
+// Delays any extra/repeated pops by half a second (500ms)
+const playDelayedPopSound = () => {
+  setTimeout(() => {
+    const delayedPop = new Audio("sound/fireworks.mp3"); 
+    delayedPop.volume = 0.4; 
+    delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
+  }, 500);
+};
+
+// Stops the sounds when the "eight vg" animation ends
+const stopPopSound = () => {
+  if (activePopSound) {
+    activePopSound.pause();
+    activePopSound.currentTime = 0;
+  }
 };
 
 // Add this right before you declare `const tl = new TimelineMax();`
+
 const playSong= () => {
   // Replace "sound/firework.mp3" with the actual path to your sound file
   const bdaySong = new Audio("sound/bday-song.mp3"); 
   bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
   bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
+   .call(() => {
+      playSong();
+    })
 
 // Animation Timeline
 const animationTimeline = () => {
@@ -253,9 +277,7 @@ const animationTimeline = () => {
         rotationZ: -45
       }
     )
-    .call(() => {
-      playSong();
-    })
+ 
     .staggerFrom(
       ".wish-hbd span",
       0.7,
