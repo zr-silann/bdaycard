@@ -418,15 +418,17 @@ const animationTimeline = () => {
 
 // Run fetch and animation sequence
 // Remove the old automatic fetchData(); at the bottom and replace with this:
-const startBtn = document.getElementById("start-btn");
-const introContainer = document.getElementById("intro-container");
+document.addEventListener("DOMContentLoaded", () => {
+  const startBtn = document.getElementById("start-btn");
+  const introContainer = document.getElementById("intro-container");
 
-if (startBtn) {
-  startBtn.addEventListener("click", () => {
-    if (introContainer) {
-      introContainer.style.display = "none";
-    }
-    playSong();
-    fetchData(); // This must be the ONLY place fetchData() is called
-  });
-}
+  if (startBtn) {
+    startBtn.addEventListener("click", () => {
+      if (introContainer) {
+        introContainer.style.display = "none";
+      }
+      playSong();
+      fetchData();
+    });
+  }
+});
