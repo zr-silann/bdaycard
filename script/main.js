@@ -96,9 +96,10 @@ const animationTimeline = () => {
 
   const tl = new TimelineMax();
 
-  tl.call(() => {
-    playSong();
-  })
+  // Removed the automatic playSong call here so it only plays on button click!
+  tl.to(".container", 0.1, { visibility: "visible" })
+    .from(".one", 0.7, { opacity: 0, y: 10 })
+    // ... rest of your timeline continues here ...
   .to(".container", 0.1, { visibility: "visible" })
   .from(".one", 0.7, { opacity: 0, y: 10 })
   .from(".two", 0.4, { opacity: 0, y: 10 })
