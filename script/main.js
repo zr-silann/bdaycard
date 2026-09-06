@@ -1,3 +1,5 @@
+console.log("main.js loaded");
+
 let activePopSound = null;
 
 const playSong = () => {
