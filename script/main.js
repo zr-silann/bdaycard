@@ -35,6 +35,14 @@ const playPopSound = () => {
   popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
 
+// Add this right before you declare `const tl = new TimelineMax();`
+const playSong= () => {
+  // Replace "sound/firework.mp3" with the actual path to your sound file
+  const bdaySong = new Audio("sound/bday-song.mp3"); 
+  popAudio.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
+};
+
 // Animation Timeline
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
@@ -231,6 +239,9 @@ const animationTimeline = () => {
     .to(".cake-container", 0.5, {
       autoAlpha: 0
     })
+  
+    // Example: if your audio element has an ID of "background-music"
+
     .from(
       ".lydia-dp",
       0.5,
@@ -242,6 +253,9 @@ const animationTimeline = () => {
         rotationZ: -45
       }
     )
+    .call(() => {
+      playSong();
+    })
     .staggerFrom(
       ".wish-hbd span",
       0.7,
