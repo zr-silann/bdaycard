@@ -1,4 +1,4 @@
-```javascript
+
 const fetchData = () => {
   fetch("customize.json")
     .then(response => {
@@ -434,4 +434,4 @@ const animationTimeline = () => {
 
 // Run fetch and animation sequence
 fetchData();
-```
+
