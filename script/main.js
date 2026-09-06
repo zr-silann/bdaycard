@@ -413,7 +413,7 @@ const animationTimeline = () => {
       tl.restart();
     });
   }
-};
+
 
 
 // Run fetch and animation sequence
@@ -423,15 +423,10 @@ const introContainer = document.getElementById("intro-container");
 
 if (startBtn) {
   startBtn.addEventListener("click", () => {
-    // Hide the intro overlay
     if (introContainer) {
       introContainer.style.display = "none";
     }
-    
-    // Play song directly inside the user click event (bypasses browser block)
     playSong();
-
-    // Start fetching customize data and run animation
-    fetchData();
+    fetchData(); // This must be the ONLY place fetchData() is called
   });
 }
