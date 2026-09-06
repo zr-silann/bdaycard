@@ -272,11 +272,7 @@ const animationTimeline = () => {
       },
       "party"
     )
-var x = document.getElementById("fireworx");
 
-function playAudio() {
-  x.play();
-}
   
     
     .staggerTo(
