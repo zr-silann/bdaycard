@@ -33,31 +33,7 @@ const fetchData = () => {
 
 // Add this right before you declare `const tl = new TimelineMax();`
 // Keep track of the active audio instance globally in your script
-let activePopSound = null;
 
-// Starts the main pop sound instantly when the animation comes in
-const playPopSoundInstantly = () => {
-  activePopSound = new Audio("sound/fireworks.mp3"); 
-  activePopSound.volume = 0.4; 
-  activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
-};
-
-// Delays any extra/repeated pops by half a second (500ms)
-const playDelayedPopSound = () => {
-  setTimeout(() => {
-    const delayedPop = new Audio("sound/fireworks.mp3"); 
-    delayedPop.volume = 0.4; 
-    delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
-  }, 500);
-};
-
-// Stops the sounds when the "eight vg" animation ends
-const stopPopSound = () => {
-  if (activePopSound) {
-    activePopSound.pause();
-    activePopSound.currentTime = 0;
-  }
-};
 
 // Add this right before you declare `const tl = new TimelineMax();`
 
@@ -67,10 +43,7 @@ const playSong= () => {
   bdaySong.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
   bdaySong.play().catch(e => console.log("Audio play blocked by browser:", e));
 };
-   .call(() => {
-      playSong();
-    })
-
+   
 // Animation Timeline
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
@@ -101,6 +74,43 @@ const animationTimeline = () => {
     rotationY: 5,
     skewX: "-15deg"
   };
+
+  .call(() => {
+      playSong();
+    })
+
+let activePopSound = null;
+
+// Starts the main pop sound instantly when the animation comes in
+const playPopSoundInstantly = () => {
+  activePopSound = new Audio("sound/fireworks.mp3"); 
+  activePopSound.volume = 0.1; 
+  activePopSound.play().catch(e => console.log("Audio play blocked by browser:", e));
+};
+
+// Delays any extra/repeated pops by half a second (500ms)
+const playDelayedPopSound = () => {
+  setTimeout(() => {
+    const delayedPop = new Audio("sound/fireworks.mp3"); 
+    delayedPop.volume = 0.1; 
+    delayedPop.play().catch(e => console.log("Audio play blocked by browser:", e));
+  }, 500);
+};
+
+// Stops the sounds when the "eight vg" animation ends
+const stopPopSound = () => {
+  if (activePopSound) {
+    let fadeAudio = setInterval(() => {
+      if (activePopSound.volume > 0.05) {
+        activePopSound.volume -= 0.05; // Reduces volume smoothly
+      } else {
+        clearInterval(fadeAudio);
+        activePopSound.pause();
+        activePopSound.currentTime = 0;
+      }
+    }, 30); // Adjust speed of fade here
+  }
+};
 
   const tl = new TimelineMax();
 
@@ -332,8 +342,9 @@ const animationTimeline = () => {
         scale: 80,
         repeat: 3,
         repeatDelay: 1.4,
-        onStart: playPopSound,   // Plays sound when the animation first starts
-        onRepeat: playPopSound   // Plays sound again for every repeat cycle
+        onStart: playPopSoundInstantly,   // Plays sound when the animation first starts
+        onRepeat: playPopSoundInstantly,
+        onComplete: StopPopSound// Plays sound again for every repeat cycle
       },
       0.3
     )
