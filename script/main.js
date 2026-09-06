@@ -27,6 +27,14 @@ const fetchData = () => {
     });
 };
 
+// Add this right before you declare `const tl = new TimelineMax();`
+const playPopSound = () => {
+  // Replace "sound/firework.mp3" with the actual path to your sound file
+  const popAudio = new Audio("fireworx.mp3"); 
+  popAudio.volume = 0.4; // Adjust volume if it's too loud (0.0 to 1.0)
+  popAudio.play().catch(e => console.log("Audio play blocked by browser:", e));
+};
+
 // Animation Timeline
 const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
@@ -284,6 +292,8 @@ const animationTimeline = () => {
         scale: 80,
         repeat: 3,
         repeatDelay: 1.4
+        onStart: playPopSound,   // Plays sound when the animation first starts
+        onRepeat: playPopSound   // Plays sound again for every repeat cycle
       },
       0.3
     )
