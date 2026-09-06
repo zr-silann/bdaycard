@@ -1,18 +1,5 @@
 // Import the data to customize and insert them into page
-const tl = new TimelineMax();
 
-  tl
-    .call(() => {
-      playSong(); // Plays your bday-song.mp3 right when the timeline starts
-    })
-    .to(".container", 0.1, {
-      visibility: "visible"
-    })
-    .from(".one", 0.7, {
-      opacity: 0,
-      y: 10
-    })
-    // ... rest of your code continues here ...
 
 const fetchData = () => {
   fetch("customize.json")
