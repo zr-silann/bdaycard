@@ -1,4 +1,28 @@
-console.log("main.js loaded");
+
+const fetchData = () => {
+  fetch("customize.json")
+    .then(res => res.json())
+    .then(data => {
+      Object.keys(data).forEach(key => {
+        if (data[key] !== "") {
+          const el = document.querySelector(`[data-node-name*="${key}"]`);
+          if (el) {
+            if (key === "imagePath") {
+              el.setAttribute("src", data[key]);
+            } else {
+              el.innerText = data[key];
+            }
+          }
+        }
+      });
+      animationTimeline();
+    })
+    .catch(err => {
+      console.warn("Using defaults due to fetch error:", err);
+      animationTimeline();
+    });
+};
+
 
 let activePopSound = null;
 
@@ -28,29 +52,7 @@ const stopPopSound = () => {
   }
 };
 
-const fetchData = () => {
-  fetch("customize.json")
-    .then(res => res.json())
-    .then(data => {
-      Object.keys(data).forEach(key => {
-        if (data[key] !== "") {
-          const el = document.querySelector(`[data-node-name*="${key}"]`);
-          if (el) {
-            if (key === "imagePath") {
-              el.setAttribute("src", data[key]);
-            } else {
-              el.innerText = data[key];
-            }
-          }
-        }
-      });
-      animationTimeline();
-    })
-    .catch(err => {
-      console.warn("Using defaults due to fetch error:", err);
-      animationTimeline();
-    });
-};
+
 
 const animationTimeline = () => {
   const textBoxChars = document.querySelector(".hbd-chatbox");
