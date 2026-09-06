@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (startBtn) {
     startBtn.addEventListener("click", () => {
-      console.log("Start clicked"); // debug log
+      console.log("Start clicked"); // Debug log
       if (introContainer) introContainer.style.display = "none";
       playSong();
       fetchData();
@@ -133,3 +133,4 @@ document.addEventListener("DOMContentLoaded", () => {
     console.warn("Start button not found in DOM");
   }
 });
+
