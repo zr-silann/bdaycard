@@ -66,7 +66,9 @@ const animationTimeline = () => {
 
   const tl = new TimelineMax();
 
-  tl.to(".container", 0.1, { visibility: "visible" })
+  // Smooth fade-in of the main animation container (replaces instant visibility swap)
+  tl.set(".container", { visibility: "visible", opacity: 0 })
+    .to(".container", 0.6, { opacity: 1 })
     .from(".one", 0.7, { opacity: 0, y: 10 })
     .from(".two", 0.4, { opacity: 0, y: 10 })
     .to(".one", 0.7, { opacity: 0, y: 10 }, "+=2.5")
@@ -125,12 +127,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if (startBtn) {
     startBtn.addEventListener("click", () => {
       console.log("Start clicked"); // Debug log
-      if (introContainer) introContainer.style.display = "none";
+
       playSong();
       fetchData();
+
+      // Fade the intro out smoothly instead of an instant cut
+      if (introContainer) {
+        TweenMax.to(introContainer, 0.6, {
+          opacity: 0,
+          onComplete: () => (introContainer.style.display = "none")
+        });
+      }
     });
   } else {
     console.warn("Start button not found in DOM");
   }
 });
-
