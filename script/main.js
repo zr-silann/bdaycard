@@ -3,50 +3,40 @@ const fetchData = () => {
   fetch("customize.json")
     .then(data => data.json())
     .then(data => {
-      const dataArr = Object.keys(data);
+      dataArr = Object.keys(data);
       dataArr.map(customData => {
         if (data[customData] !== "") {
-          const el = document.querySelector(`[data-node-name*="${customData}"]`);
-          if (el) { // Safety check kung nag-eexist yung element sa HTML
-            if (customData === "imagePath") {
-              el.setAttribute("src", data[customData]);
-            } else {
-              el.innerText = data[customData];
-            }
+          if (customData === "imagePath") {
+            document
+              .querySelector(`[data-node-name*="${customData}"]`)
+              .setAttribute("src", data[customData]);
+          } else {
+            document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData];
           }
         }
 
-        // Check if the iteration is over, Run animation if so
+        // Check if the iteration is over
+        // Run amimation if so
         if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
           animationTimeline();
         } 
       });
-    })
-    .catch(err => {
-      console.warn("Hindi makuha ang customize.json (CORS/File error). Tinutuloy pa rin ang animation...", err);
-      // Fallback: I-run pa rin ang animation kahit mag-error ang JSON para walang white screen
-      animationTimeline(); 
     });
 };
 
 // Animation Timeline
 const animationTimeline = () => {
-  // Split chars that need to be animated individually
+  // Spit chars that needs to be animated individually
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
 
-  // INAYOS NA TYPO: Dinagdagan ng > ang </span
-  if (textBoxChars) {
-    textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
-      .split("")
-      .join("</span><span>")}</span>`;
-  }
+  textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
+    .split("")
+    .join("</span><span>")}</span`;
 
-  if (hbd) {
-    hbd.innerHTML = `<span>${hbd.innerHTML
-      .split("")
-      .join("</span><span>")}</span>`;
-  }
+  hbd.innerHTML = `<span>${hbd.innerHTML
+    .split("")
+    .join("</span><span>")}</span`;
 
   const ideaTextTrans = {
     opacity: 0,
@@ -97,6 +87,7 @@ const animationTimeline = () => {
     .from(".three", 0.7, {
       opacity: 0,
       y: 10
+      // scale: 0.7
     })
     .to(
       ".three",
@@ -241,6 +232,7 @@ const animationTimeline = () => {
       {
         opacity: 0,
         y: -50,
+        // scale: 0.3,
         rotation: 150,
         skewX: "30deg",
         ease: Elastic.easeOut.config(1, 0.5)
@@ -300,13 +292,14 @@ const animationTimeline = () => {
       "+=1"
     );
 
+  // tl.seek("currentStep");
+  // tl.timeScale(2);
+
   // Restart Animation on click
   const replyBtn = document.getElementById("replay");
-  if (replyBtn) { // Safety check
-    replyBtn.addEventListener("click", () => {
-      tl.restart();
-    });
-  }
+  replyBtn.addEventListener("click", () => {
+    tl.restart();
+  });
 };
 
 // Run fetch and animation in sequence
