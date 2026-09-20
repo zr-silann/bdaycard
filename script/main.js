@@ -1,8 +1,11 @@
 let activePopSound = null;
+let bdaySong = null; // 1. Gawing global variable para hindi mawala sa memory ng browser
 
 const playSong = () => {
-  const bdaySong = new Audio("sound/bday-song.mp3");
-  bdaySong.volume = 0.4;
+  if (!bdaySong) {
+    bdaySong = new Audio("sound/bday-song.mp3");
+    bdaySong.volume = 0.4;
+  }
   bdaySong.play().catch(e => console.log("Audio blocked:", e));
 };
 
@@ -25,7 +28,6 @@ const stopPopSound = () => {
     }, 30);
   }
 };
-
 // Import the data to customize and insert them into page
 const fetchData = () => {
   fetch("customize.json")
@@ -346,17 +348,19 @@ document.addEventListener("DOMContentLoaded", () => {
     startBtn.addEventListener("click", () => {
       console.log("Start clicked");
 
+      // 2. ILABAS ang playSong() dito! 
+      // Dapat tumunog agad pagkaclick para hindi ma-block ng strict browser security.
+      playSong();
+
       if (introContainer) {
         TweenMax.to(introContainer, 0.6, {
           opacity: 0,
           onComplete: () => {
             introContainer.style.display = "none";
-            playSong();
-            fetchData();
+            fetchData(); // Ito nalang ang maiiwan sa loob
           }
         });
       } else {
-        playSong();
         fetchData();
       }
     });
