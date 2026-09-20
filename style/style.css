@@ -19,6 +19,12 @@ body {
   overflow: hidden;
 }
 
+/* The start screen is inside .container, which is hidden until the animation starts.
+   Keep the start screen visible so the user can click Start. */
+.container #intro-container {
+  visibility: visible !important;
+}
+
 .container div.six {
   top: 10vh;
   z-index: 1;
@@ -312,6 +318,7 @@ body {
   box-sizing: border-box;
   scroll-behavior: smooth;
 }
+
 .letter-wrapper {
   display: flex;
   flex-direction: column;
