@@ -24,6 +24,26 @@ const fetchData = () => {
     });
 };
 
+const showBirthdayCards = () => {
+  const container = document.querySelector(".container");
+  const cardWrapper = document.getElementById("cardWrapper");
+
+  if (!cardWrapper) {
+    console.error("Birthday cards container was not found.");
+    return;
+  }
+
+  if (container) {
+    container.classList.add("is-hidden");
+  }
+
+  cardWrapper.classList.add("is-visible");
+  cardWrapper.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+};
+
 // Animation Timeline
 const animationTimeline = () => {
   // Spit chars that needs to be animated individually
@@ -287,7 +307,8 @@ const animationTimeline = () => {
       ".last-smile",
       0.5,
       {
-        rotation: 90
+        rotation: 90,
+        onComplete: showBirthdayCards
       },
       "+=1"
     );
