@@ -1,42 +1,64 @@
 // Import the data to customize and insert them into page
 const fetchData = () => {
   fetch("customize.json")
-    .then(data => data.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to load customize.json: ${response.status}`);
+      }
+      return response.json();
+    })
     .then(data => {
-      dataArr = Object.keys(data);
-      dataArr.map(customData => {
-        if (data[customData] !== "") {
-          if (customData === "imagePath") {
-            document
-              .querySelector(`[data-node-name*="${customData}"]`)
-              .setAttribute("src", data[customData]);
-          } else {
-            document.querySelector(`[data-node-name*="${customData}"]`).innerText = data[customData];
-          }
-        }
+      const dataArr = Object.keys(data);
 
-        // Check if the iteration is over
-        // Run amimation if so
-        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
-          animationTimeline();
-        } 
+      dataArr.forEach(customData => {
+        if (data[customData] === "") return;
+
+        const node = document.querySelector(`[data-node-name*="${customData}"]`);
+        if (!node) return;
+
+        if (customData === "imagePath") {
+          node.setAttribute("src", data[customData]);
+        } else {
+          node.innerText = data[customData];
+        }
       });
+
+      animationTimeline();
+    })
+    .catch(error => {
+      console.error("Could not load customization data:", error);
+      if (document.querySelector(".container")) {
+        document.querySelector(".container").style.visibility = "visible";
+      }
     });
 };
 
 // Animation Timeline
 const animationTimeline = () => {
+  if (typeof TimelineMax === "undefined") {
+    console.error("TimelineMax is not loaded.");
+    const container = document.querySelector(".container");
+    if (container) {
+      container.style.visibility = "visible";
+    }
+    return;
+  }
+
   // Spit chars that needs to be animated individually
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
 
-  textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
-    .split("")
-    .join("</span><span>")}</span`;
+  if (textBoxChars) {
+    textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
+      .split("")
+      .join("</span><span>")}</span`;
+  }
 
-  hbd.innerHTML = `<span>${hbd.innerHTML
-    .split("")
-    .join("</span><span>")}</span`;
+  if (hbd) {
+    hbd.innerHTML = `<span>${hbd.innerHTML
+      .split("")
+      .join("</span><span>")}</span`;
+  }
 
   const ideaTextTrans = {
     opacity: 0,
@@ -297,10 +319,24 @@ const animationTimeline = () => {
 
   // Restart Animation on click
   const replyBtn = document.getElementById("replay");
-  replyBtn.addEventListener("click", () => {
-    tl.restart();
-  });
+  if (replyBtn) {
+    replyBtn.addEventListener("click", () => {
+      tl.restart();
+    });
+  }
 };
 
-// Run fetch and animation in sequence
-fetchData();
+const introContainer = document.getElementById("intro-container");
+const startBtn = document.getElementById("start-btn");
+
+if (startBtn && introContainer) {
+  startBtn.addEventListener("click", () => {
+    introContainer.style.display = "none";
+    if (document.querySelector(".container")) {
+      document.querySelector(".container").style.visibility = "visible";
+    }
+    fetchData();
+  });
+} else {
+  fetchData();
+}
