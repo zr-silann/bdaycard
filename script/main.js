@@ -1,42 +1,13 @@
-let activePopSound = null;
-let bdaySong = null; // 1. Gawing global variable para hindi mawala sa memory ng browser
-
-const playSong = () => {
-  if (!bdaySong) {
-    bdaySong = new Audio("sound/bday-song.mp3");
-    bdaySong.volume = 0.4;
-  }
-  bdaySong.play().catch(e => console.log("Audio blocked:", e));
-};
-
-const playPopSoundInstantly = () => {
-  activePopSound = new Audio("sound/fireworks.mp3");
-  activePopSound.volume = 0.1;
-  activePopSound.play().catch(e => console.log("Audio blocked:", e));
-};
-
-const stopPopSound = () => {
-  if (activePopSound) {
-    const fade = setInterval(() => {
-      if (activePopSound.volume > 0.05) {
-        activePopSound.volume -= 0.05;
-      } else {
-        clearInterval(fade);
-        activePopSound.pause();
-        activePopSound.currentTime = 0;
-      }
-    }, 30);
-  }
-};
 // Import the data to customize and insert them into page
 const fetchData = () => {
   fetch("customize.json")
-    .then(res => res.json())
+    .then(data => data.json())
     .then(data => {
-      Object.keys(data).forEach(customData => {
+      const dataArr = Object.keys(data);
+      dataArr.map(customData => {
         if (data[customData] !== "") {
           const el = document.querySelector(`[data-node-name*="${customData}"]`);
-          if (el) {
+          if (el) { // Safety check kung nag-eexist yung element sa HTML
             if (customData === "imagePath") {
               el.setAttribute("src", data[customData]);
             } else {
@@ -44,12 +15,17 @@ const fetchData = () => {
             }
           }
         }
+
+        // Check if the iteration is over, Run animation if so
+        if ( dataArr.length === dataArr.indexOf(customData) + 1 ) {
+          animationTimeline();
+        } 
       });
-      animationTimeline();
     })
     .catch(err => {
-      console.warn("Using defaults due to fetch error:", err);
-      animationTimeline();
+      console.warn("Hindi makuha ang customize.json (CORS/File error). Tinutuloy pa rin ang animation...", err);
+      // Fallback: I-run pa rin ang animation kahit mag-error ang JSON para walang white screen
+      animationTimeline(); 
     });
 };
 
@@ -59,6 +35,7 @@ const animationTimeline = () => {
   const textBoxChars = document.getElementsByClassName("hbd-chatbox")[0];
   const hbd = document.getElementsByClassName("wish-hbd")[0];
 
+  // INAYOS NA TYPO: Dinagdagan ng > ang </span
   if (textBoxChars) {
     textBoxChars.innerHTML = `<span>${textBoxChars.innerHTML
       .split("")
@@ -88,9 +65,9 @@ const animationTimeline = () => {
   const tl = new TimelineMax();
 
   tl
-    // Smooth fade-in instead of instant visibility swap
-    .set(".container", { visibility: "visible", opacity: 0 })
-    .to(".container", 0.6, { opacity: 1 })
+    .to(".container", 0.1, {
+      visibility: "visible"
+    })
     .from(".one", 0.7, {
       opacity: 0,
       y: 10
@@ -304,10 +281,7 @@ const animationTimeline = () => {
         opacity: 0,
         scale: 80,
         repeat: 3,
-        repeatDelay: 1.4,
-        onStart: playPopSoundInstantly,
-        onRepeat: playPopSoundInstantly,
-        onComplete: stopPopSound
+        repeatDelay: 1.4
       },
       0.3
     )
@@ -324,47 +298,16 @@ const animationTimeline = () => {
         rotation: 90
       },
       "+=1"
-    )
-    .to("#cardWrapper", 1, {
-      autoAlpha: 1,
-      onComplete: () => console.log("Timeline complete, card should be visible")
-    });
+    );
 
   // Restart Animation on click
   const replyBtn = document.getElementById("replay");
-  if (replyBtn) {
+  if (replyBtn) { // Safety check
     replyBtn.addEventListener("click", () => {
       tl.restart();
     });
   }
 };
 
-// 🚀 Init — wait for the start button instead of auto-running
-document.addEventListener("DOMContentLoaded", () => {
-  const startBtn = document.getElementById("start-btn");
-  const introContainer = document.getElementById("intro-container");
-
-  if (startBtn) {
-    startBtn.addEventListener("click", () => {
-      console.log("Start clicked");
-
-      // 2. ILABAS ang playSong() dito! 
-      // Dapat tumunog agad pagkaclick para hindi ma-block ng strict browser security.
-      playSong();
-
-      if (introContainer) {
-        TweenMax.to(introContainer, 0.6, {
-          opacity: 0,
-          onComplete: () => {
-            introContainer.style.display = "none";
-            fetchData(); // Ito nalang ang maiiwan sa loob
-          }
-        });
-      } else {
-        fetchData();
-      }
-    });
-  } else {
-    console.warn("Start button not found in DOM");
-  }
-});
+// Run fetch and animation in sequence
+fetchData();
