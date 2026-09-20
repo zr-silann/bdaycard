@@ -297,3 +297,73 @@ body {
     font-weight: lighter;
   }
 }
+
+.letter-container {
+  display: none;
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #ffe6f2, #fff8fc);
+  box-sizing: border-box;
+}
+
+.letter-container.is-visible {
+  display: block;
+  animation: cardsFadeIn 1s ease forwards;
+}
+
+.letter-wrapper {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.letter-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(255, 77, 148, 0.18);
+  text-align: left;
+  line-height: 1.8;
+  color: #4a2939;
+}
+
+.letter-card h2 {
+  margin-top: 0;
+  color: #ff4d94;
+  font-size: 1.8rem;
+}
+
+.letter-card p {
+  margin-bottom: 16px;
+}
+
+.container.is-hidden {
+  display: none;
+}
+
+@keyframes cardsFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .letter-container {
+    padding: 25px 14px;
+  }
+
+  .letter-card {
+    padding: 22px;
+  }
+
+  .letter-card h2 {
+    font-size: 1.4rem;
+  }
+}
